@@ -1,4 +1,6 @@
 import { exec } from "child_process";
+import * as vscode from 'vscode';
+
 
 class HeaderVar {
 	name: string;
@@ -12,6 +14,9 @@ class HeaderVar {
 		if (exp[3])
 			this.trim = exp[3] == "1" ? true : false;
 		this.command = exp[4];
+
+		// fuck newlines
+		this.trim = true;
 	}
 }
 
@@ -19,8 +24,12 @@ export class Parser {
 
 	variables: HeaderVar[] = [];
 	banner:string = '';
+
+	// settings
+	runOnSave: boolean = true;
 	constructor(text: string[]) {
-		let regX = /\$(\w+)\s*(?:\((?:,?\s*padding:\s*(\d+))?\s*(?:,?\s*trim:\s*(\d+))?\))?\s*=\s*(.*)/;
+		const regX = /\$(\w+)\s*(?:\((?:,?\s*padding:\s*(\d+))?\s*(?:,?\s*trim:\s*(\d+))?\))?\s*=\s*(.*)/;
+		const settingsRegX = /!(\w+)\s+(\d)+/;
 
 		for (let i = 0; i < text.length; i++) {
 			const e = text[i];
@@ -28,12 +37,32 @@ export class Parser {
 			{
 				const data = e.match(regX);
 				console.log(data);
-				if (data != null)
+				if (data === null)
+				{
+					vscode.window.showErrorMessage(`Error! line ${i}: parsing error`);
+				}
+				else
+				{
 					this.variables.push(new HeaderVar(data));
+				}
 			}
-			// begin banner
+			else if (e[0] == '!')
+			{
+				const data = e.match(settingsRegX);
+				console.log(data);
+				if (data === null)
+				{
+					vscode.window.showErrorMessage(`Error! line ${i}: parsing error`);
+				}
+				else
+				{
+					if (data[1] == 'RunOnSave')
+						this.runOnSave = data[2] == '1' ? true : false;
+				}
+			}
 			else if (e == '===')
 			{
+				// begin banner
 				for (let x = i + 1; x < text.length; x++) {
 					const b = text[x];
 					this.banner += b + '\n';
@@ -56,19 +85,21 @@ export class Parser {
 					return;
 				}
 				if (hv.trim)
-					stdout = stdout.replace('\n', '');
+					stdout = stdout.replace(/\n/g, '');
 				if (stdout.length < hv.padding)
 				{
 					const toadd = " ".repeat(hv.padding - stdout.length);
 					stdout += toadd;
 				}
-				console.log(stdout.length)
 				return resolve(stdout);
 			});
 		});
 	}
 
-	async createBanner(filename: string): Promise<string> {
+	async createBanner(filename: string, delimiters: string[] | undefined): Promise<string> {
+		if (delimiters === undefined)
+			return "";
+
 		let results: string[] = [];
 		for (let i = 0; i < this.variables.length; i++) {
 			const e = this.variables[i];
@@ -79,13 +110,15 @@ export class Parser {
 		
 		for (let i = 0; i < this.variables.length; i++) {
 			const e = this.variables[i];
-			const regX = new RegExp('\\$' + e.name + 'p*[^A-Z]', 'g');
+			const regX = new RegExp('\\$' + e.name + 'p*(?=[^A-Z])', 'g');
 			rv = rv.replace(regX, results[i]);
 		}
 		let fileRx = new RegExp('\\$FILEp*', 'g');
-		rv = rv.replace(fileRx, filename);		
+		rv = rv.replace(fileRx, filename);
+		rv = delimiters[0] + rv.replace(/\n/g, delimiters[1] + '\n' + delimiters[0]);
+		rv = rv.substr(0, rv.length - delimiters[1].length);
+
 
 		return rv;
 	}
-
 }

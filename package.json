@@ -10,15 +10,14 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:header-builder.helloWorld",
 	"*"
   ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "header-builder.helloWorld",
-        "title": "Hello World"
+        "command": "header-builder.checkHeaderFile",
+        "title": "BROKEN: Check .header File"
       }
     ],
     "keybindings": [
