@@ -75,12 +75,13 @@ export class Parser {
 		}
 		let rv: string = this.banner;
 		
+		
 		for (let i = 0; i < this.variables.length; i++) {
 			const e = this.variables[i];
-			rv = rv.replace('$' + e.name, results[i]);
+			const regX = new RegExp('\\$' + e.name, 'g');
+			rv = rv.replace(regX, results[i]);
 		}
 		return rv;
 	}
-
 
 }
