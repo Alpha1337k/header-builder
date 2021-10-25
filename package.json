@@ -10,7 +10,8 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:header-builder.helloWorld"
+    "onCommand:header-builder.helloWorld",
+	"*"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -19,7 +20,15 @@
         "command": "header-builder.helloWorld",
         "title": "Hello World"
       }
-    ]
+    ],
+    "keybindings": [
+		{
+		  "command": "header-builder.applyHeader",
+		  "key": "ctrl+alt+h",
+		  "mac": "cmd+alt+h",
+		  "when": "editorTextFocus"
+		}
+	]
   },
   "scripts": {
     "vscode:prepublish": "npm run package",

@@ -1,25 +1,45 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import * as fs from 'fs'
+import { Parser } from './parser';
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-	
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
+	var parser : Parser;
 	console.log('Congratulations, your extension "header-builder" is now active!');
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('header-builder.helloWorld', () => {
+	context.subscriptions.push(vscode.commands.registerCommand('header-builder.helloWorld', () => {
+
+		vscode.window.showInformationMessage('Hello World from header-builder!');
+	}));
+
+	async function bannertest() {
+		console.log(await parser.createBanner());
+	}
+
+	context.subscriptions.push(vscode.commands.registerCommand('header-builder.applyHeader', () => {
 		// The code you place here will be executed every time your command is executed
 		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from header-builder!');
-	});
+		const activeEditor = vscode.window.activeTextEditor;
+		if (activeEditor === undefined)
+			return;
+		let url : string = activeEditor.document.uri.path;
 
-	context.subscriptions.push(disposable);
+		while (url != "") {
+			
+			url = url.substr(0, url.lastIndexOf('/'));
+			console.log(url + '/.header');
+			if (fs.existsSync(url + '/.header'))
+			{
+				vscode.window.showInformationMessage('Wow we found a header!' + url);
+				parser = new Parser(fs.readFileSync(url + '/.header').toString().split('\n'));
+
+				bannertest();
+
+				return;
+			}
+		}
+		vscode.window.showInformationMessage("no header found!");
+	}));
+
 }
 
 // this method is called when your extension is deactivated
