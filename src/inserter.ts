@@ -19,7 +19,8 @@ export class Inserter {
 		return true;
 	}
 
-	async applyHeader(banner: string, doc: vscode.TextDocument, editor: vscode.TextEditorEdit, delim: string[])
+	async applyHeader(banner: string, doc: vscode.TextDocument, 
+		editor: vscode.TextEditorEdit, delim: string[], createIfMissing?: boolean)
 	{
 		let len: number = 0;
 		for(var i=len=0; i<banner.length; len+=+('\n'===banner[i++]));
@@ -28,7 +29,7 @@ export class Inserter {
 		{
 			editor.replace(new vscode.Range(0, 0, len, 0), banner);
 		}
-		else
+		else if (createIfMissing !== false)
 		{
 			editor.insert(new vscode.Position(0, 0), banner);
 		}

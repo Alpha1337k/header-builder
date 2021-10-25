@@ -1,6 +1,6 @@
 import { exec } from "child_process";
 import * as vscode from 'vscode';
-
+import * as fs from 'fs'
 
 class HeaderVar {
 	name: string;
@@ -21,16 +21,21 @@ class HeaderVar {
 }
 
 export class Parser {
+	// headerfile data
+	lastEditDate:	Date;
+	path:			string;
 
 	variables: HeaderVar[] = [];
 	banner:string = '';
 
 	// settings
 	runOnSave: boolean = true;
-	constructor(text: string[]) {
+	constructor(text: string[], path: string) {
 		const regX = /\$(\w+)\s*(?:\((?:,?\s*padding:\s*(\d+))?\s*(?:,?\s*trim:\s*(\d+))?\))?\s*=\s*(.*)/;
 		const settingsRegX = /!(\w+)\s+(\d)+/;
 
+		this.lastEditDate = fs.statSync(path).mtime;
+		this.path = path;
 		for (let i = 0; i < text.length; i++) {
 			const e = text[i];
 			if (e[0] == '$')
