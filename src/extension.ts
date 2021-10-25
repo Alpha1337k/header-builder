@@ -82,6 +82,8 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.window.showInformationMessage('SAVED: Wow we found a header! ' + hPath);
 		updateParser(hPath);
 
+		if (parser.runOnSave === false)
+			return;
 		const delim = languageDemiliters[event.document.languageId];
 		if (delim === undefined)
 		{
