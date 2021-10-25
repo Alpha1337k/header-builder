@@ -43,9 +43,10 @@ export class Parser {
 		}
 	}
 
-	async #createResult(hv: HeaderVar): Promise<string> {
+	async #createResult(hv: HeaderVar, filename: string): Promise<string> {
 		return new Promise(resolve => {
-			exec(hv.command, (error, stdout, stderr) => {
+			let fileRx = new RegExp('\\$FILE', 'g');
+			exec(hv.command.replace(fileRx, filename), (error, stdout, stderr) => {
 				if (error) {
 					console.log(`error: ${error.message}`);
 					return;
@@ -67,20 +68,23 @@ export class Parser {
 		});
 	}
 
-	async createBanner(): Promise<string> {
+	async createBanner(filename: string): Promise<string> {
 		let results: string[] = [];
 		for (let i = 0; i < this.variables.length; i++) {
 			const e = this.variables[i];
-			results.push(await this.#createResult(e));
+			results.push(await this.#createResult(e, filename));
 		}
 		let rv: string = this.banner;
 		
 		
 		for (let i = 0; i < this.variables.length; i++) {
 			const e = this.variables[i];
-			const regX = new RegExp('\\$' + e.name, 'g');
+			const regX = new RegExp('\\$' + e.name + 'p*[^A-Z]', 'g');
 			rv = rv.replace(regX, results[i]);
 		}
+		let fileRx = new RegExp('\\$FILEp*', 'g');
+		rv = rv.replace(fileRx, filename);		
+
 		return rv;
 	}
 

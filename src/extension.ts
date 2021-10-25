@@ -12,7 +12,8 @@ export function activate(context: vscode.ExtensionContext) {
 	}));
 
 	async function bannertest() {
-		console.log(await parser.createBanner());
+		if (vscode.window.activeTextEditor)
+			console.log(await parser.createBanner(vscode.window.activeTextEditor?.document.uri.path));
 	}
 
 	context.subscriptions.push(vscode.commands.registerCommand('header-builder.applyHeader', () => {
