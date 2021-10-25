@@ -1,0 +1,13 @@
+$HN (padding:8, trim: 1) =uname
+$F=file $FILE
+
+!RunOnSave 0
+
+===
+-----------
+| $HNppppp|
+| $HNppppp|
+| $FILE|
+| $F files|
+| $F|
+-----------
