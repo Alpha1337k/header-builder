@@ -1,13 +1,24 @@
 {
   "name": "header-builder",
-  "displayName": "header-builder",
+  "displayName": "Header Builder",
   "description": "Vscode custom header extension",
   "version": "0.0.1",
+  "icon": "logo.png",
+  "publisher": "Alpha1337k",
+  "repository": {
+	  "type": "git",
+	  "url": "https://github.com/Alpha1337k/header-builder"
+  },
   "engines": {
     "vscode": "^1.61.0"
   },
   "categories": [
     "Other"
+  ],
+  "keywords": [
+	  "header",
+	  "banner",
+	  "automation"
   ],
   "activationEvents": [
 	"*"
