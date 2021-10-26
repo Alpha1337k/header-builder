@@ -12,7 +12,7 @@ Want your own dynamic headers on your projects, but cant be arsed to do much wor
 
 Create a new file called .header in the root of your scope. Variables are defined in the `$NAME=command` manner. The `command` part will be executed just like in the shell.
 
-You can quickly add padding using `$NAME(padding:x)=command`. At the end of the config file, write `===` followed by a newline. The rest will be used as banner. `$NAME` will be resolved to the command listed above.
+You can quickly add padding using `$NAME(padding:x)=command`. At the end of the config file, write `===` followed by a newline. The rest will be used as banner. `$NAME` will be resolved to the command listed above. If needed you can add p characters at the end for visual padding.
 
 If you wish to disable on save changes, you can add the `!RunOnSave 0` setting to the header.
 
