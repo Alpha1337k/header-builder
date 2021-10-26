@@ -43,27 +43,19 @@ export class Parser {
 				const data = e.match(regX);
 				console.log(data);
 				if (data === null)
-				{
-					vscode.window.showErrorMessage(`Error! line ${i}: parsing error`);
-				}
+					throw `Error! line ${i}: parsing error`;
 				else
-				{
 					this.variables.push(new HeaderVar(data));
-				}
 			}
 			else if (e[0] == '!')
 			{
 				const data = e.match(settingsRegX);
 				console.log(data);
 				if (data === null)
-				{
-					vscode.window.showErrorMessage(`Error! line ${i}: parsing error`);
-				}
+					throw `Error! line ${i}: parsing error`;
 				else
-				{
 					if (data[1] == 'RunOnSave')
 						this.runOnSave = data[2] == '1' ? true : false;
-				}
 			}
 			else if (e == '===')
 			{

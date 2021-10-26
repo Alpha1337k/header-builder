@@ -5,7 +5,7 @@ import { Inserter } from './inserter';
 import { languageDemiliters } from './delimiters';
 
 
-var parser : Parser;
+var parser : Parser | undefined;
 var inserter: Inserter = new Inserter();
 
 function getHeaderFile(url:string): string {
@@ -22,16 +22,14 @@ function getHeaderFile(url:string): string {
 }
 
 function updateParser(path:string) {
-	if (parser === undefined || path !== parser.path)
+	if (parser === undefined || path !== parser.path || fs.statSync(path).mtime > parser.lastEditDate)
 	{
-		parser = new Parser(fs.readFileSync(path).toString().split('\n'), path);
-	}
-	else
-	{
-		const stat = fs.statSync(path)
-		if (stat.mtime > parser.lastEditDate)
-		{
+		try {
 			parser = new Parser(fs.readFileSync(path).toString().split('\n'), path);
+			vscode.window.showInformationMessage("Updated .header config!");
+		} catch (error: any) {
+			parser = undefined;
+			vscode.window.showErrorMessage(error);
 		}
 	}
 }
@@ -49,8 +47,9 @@ export function activate(context: vscode.ExtensionContext) {
 			vscode.window.showErrorMessage("No header found!");
 		else
 		{
-			vscode.window.showInformationMessage('Wow we found a header! ' + hPath);
 			updateParser(hPath);
+			if (parser === undefined)
+				return;
 			const delim = languageDemiliters[activeEditor.document.languageId];
 			if (delim === undefined)
 			{
@@ -79,10 +78,8 @@ export function activate(context: vscode.ExtensionContext) {
 			return;
 		const editor: vscode.TextEditor = vscode.window.activeTextEditor;
 
-		vscode.window.showInformationMessage('SAVED: Wow we found a header! ' + hPath);
 		updateParser(hPath);
-
-		if (parser.runOnSave === false)
+		if (parser === undefined || parser.runOnSave === false)
 			return;
 		const delim = languageDemiliters[event.document.languageId];
 		if (delim === undefined)
@@ -93,7 +90,7 @@ export function activate(context: vscode.ExtensionContext) {
 		event.waitUntil(
 			Promise.resolve	(
 				parser.createBanner(event.document.uri.path, delim).then((banner: string) => {
-					console.log("banner: ", banner);
+					console.log("banner:\n", banner);
 					editor.edit((edit) => {
 						inserter.applyHeader(banner, event.document, edit, delim, false);
 					});
