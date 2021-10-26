@@ -70,10 +70,7 @@ export function activate(context: vscode.ExtensionContext) {
 		
 		const hPath = getHeaderFile(event.document.uri.path);
 		if (hPath === "")
-		{
-			vscode.window.showErrorMessage("No .header file found!");
 			return;
-		}
 		if (vscode.window.activeTextEditor === undefined)
 			return;
 		const editor: vscode.TextEditor = vscode.window.activeTextEditor;
@@ -84,7 +81,6 @@ export function activate(context: vscode.ExtensionContext) {
 		const delim = languageDemiliters[event.document.languageId];
 		if (delim === undefined)
 		{
-			vscode.window.showErrorMessage("Error: document type not supported.");
 			return;
 		}
 		event.waitUntil(
