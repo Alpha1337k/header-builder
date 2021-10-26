@@ -7,6 +7,9 @@ Want your own dynamic headers on your projects, but cant be arsed to do much wor
 - Mac: <kbd>⌘</kbd> + <kbd>⌥</kbd> + <kbd>H</kbd>
 - Linux: <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>H</kbd>
 
+## Commands
+- Header Builder: Create headers in all files.
+
 ## Config file
 > Sample file can be found in the sample directory
 

@@ -7,6 +7,7 @@ import { languageDemiliters } from './delimiters';
 
 var parser : Parser | undefined;
 var inserter: Inserter = new Inserter();
+var createEverywhereLock: boolean = false;
 
 function getHeaderFile(url:string): string {
 	while (url !== "") {
@@ -32,6 +33,29 @@ function updateParser(path:string) {
 			vscode.window.showErrorMessage((error as Error).message);
 		}
 	}
+}
+
+async function createHeadersEverywhere(files:vscode.Uri[]) {
+	createEverywhereLock = true;
+	for (let i = 0; i < files.length; i++) {
+		const e = files[i];
+		let doc = await vscode.workspace.openTextDocument(e);
+
+		const delim = languageDemiliters[doc.languageId];
+		if (delim === undefined || parser === undefined)
+		{
+			continue;
+		}
+		let editor = await vscode.window.showTextDocument(doc, 1, false);
+
+		const banner = await parser.createBanner(doc.uri.path, delim);
+		await editor.edit((edit) => {
+			inserter.applyHeader(banner, doc, edit, delim);
+		});
+		await doc.save();
+		await vscode.commands.executeCommand("workbench.action.closeActiveEditor");
+	}
+	createEverywhereLock = false;
 }
 
 export function activate(context: vscode.ExtensionContext) {
@@ -67,7 +91,8 @@ export function activate(context: vscode.ExtensionContext) {
 
 	const watcher = (subscriptions: vscode.Disposable[]) => 
 		vscode.workspace.onWillSaveTextDocument((event: vscode.TextDocumentWillSaveEvent) => {
-		
+		if (createEverywhereLock === true)
+			return;
 		const hPath = getHeaderFile(event.document.uri.path);
 		if (hPath === "")
 			return;
@@ -95,6 +120,22 @@ export function activate(context: vscode.ExtensionContext) {
 		);
 	});
 	watcher(context.subscriptions);
+
+	context.subscriptions.push(vscode.commands.registerCommand('header-builder.createHeadersEverywhere', () => {
+
+		if (vscode.workspace.workspaceFolders === undefined)
+		{
+			vscode.window.showErrorMessage("Error: no workspace opened");
+			return;
+		}
+		const path = getHeaderFile(vscode.workspace.workspaceFolders[0].uri.path + '/');
+		updateParser(path);
+		if (parser === undefined)
+			return;	
+		vscode.workspace.findFiles("**/*", '', undefined).then((files: vscode.Uri[]) => {
+			createHeadersEverywhere(files);
+		});
+	}));
 }
 
 // this method is called when your extension is deactivated

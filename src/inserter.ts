@@ -19,7 +19,7 @@ export class Inserter {
 		return true;
 	}
 
-	async applyHeader(banner: string, doc: vscode.TextDocument, 
+	applyHeader(banner: string, doc: vscode.TextDocument, 
 		editor: vscode.TextEditorEdit, delim: string[], createIfMissing?: boolean)
 	{
 		let len: number = 0;

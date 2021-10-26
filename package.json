@@ -27,8 +27,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "header-builder.checkHeaderFile",
-        "title": "BROKEN: Check .header File"
+        "command": "header-builder.createHeadersEverywhere",
+        "title": "Header Builder: Create headers in all files"
       }
     ],
     "keybindings": [
