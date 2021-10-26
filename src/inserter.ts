@@ -14,7 +14,7 @@ export class Inserter {
 				continue;
 			return false;
 		}
-		if (i == text.lineCount && len > i)
+		if (i === text.lineCount && len > i)
 			return false;
 		return true;
 	}

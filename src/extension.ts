@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import * as fs from 'fs'
+import * as fs from 'fs';
 import { Parser } from './parser';
 import { Inserter } from './inserter';
 import { languageDemiliters } from './delimiters';
@@ -9,7 +9,7 @@ var parser : Parser | undefined;
 var inserter: Inserter = new Inserter();
 
 function getHeaderFile(url:string): string {
-	while (url != "") {
+	while (url !== "") {
 			
 		url = url.substr(0, url.lastIndexOf('/'));
 		console.log(url + '/.header');
@@ -29,7 +29,7 @@ function updateParser(path:string) {
 			vscode.window.showInformationMessage("Updated .header config!");
 		} catch (error: any) {
 			parser = undefined;
-			vscode.window.showErrorMessage(error);
+			vscode.window.showErrorMessage((error as Error).message);
 		}
 	}
 }
@@ -60,7 +60,7 @@ export function activate(context: vscode.ExtensionContext) {
 			{
 				vscode.window.activeTextEditor?.edit((edit) => {
 					inserter.applyHeader(banner, activeEditor.document, edit, delim);
-				})
+				});
 			});
 		}
 	}));

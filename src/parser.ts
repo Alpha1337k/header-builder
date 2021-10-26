@@ -1,18 +1,17 @@
 import { exec } from "child_process";
-import * as vscode from 'vscode';
-import * as fs from 'fs'
+import * as fs from 'fs';
 
 class HeaderVar {
-	name: string;
-	padding: number = 0;
-	command: string;
+	name	: string;
+	padding	: number = 0;
+	command	: string;
 	trim	: boolean = false;
 	constructor(exp: RegExpMatchArray) {
 		this.name = exp[1];
 		if (exp[2])
 			this.padding = parseInt(exp[2]);
 		if (exp[3])
-			this.trim = exp[3] == "1" ? true : false;
+			this.trim = exp[3] === "1" ? true : false;
 		this.command = exp[4];
 
 		// fuck newlines
@@ -38,26 +37,26 @@ export class Parser {
 		this.path = path;
 		for (let i = 0; i < text.length; i++) {
 			const e = text[i];
-			if (e[0] == '$')
+			if (e[0] === '$')
 			{
 				const data = e.match(regX);
 				console.log(data);
 				if (data === null)
-					throw `Error! line ${i}: parsing error`;
+					throw new Error(`Error! line ${i}: parsing error`);
 				else
 					this.variables.push(new HeaderVar(data));
 			}
-			else if (e[0] == '!')
+			else if (e[0] === '!')
 			{
 				const data = e.match(settingsRegX);
 				console.log(data);
 				if (data === null)
-					throw `Error! line ${i}: parsing error`;
+					throw new Error(`Error! line ${i}: parsing error`);
 				else
-					if (data[1] == 'RunOnSave')
-						this.runOnSave = data[2] == '1' ? true : false;
+					if (data[1] === 'RunOnSave')
+						this.runOnSave = data[2] === '1' ? true : false;
 			}
-			else if (e == '===')
+			else if (e === '===')
 			{
 				// begin banner
 				for (let x = i + 1; x < text.length; x++) {

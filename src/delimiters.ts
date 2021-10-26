@@ -1,11 +1,11 @@
-const hashes = ['# ', ' #']
-const slashes = ['/* ', ' */']
-const semicolon = ['; ', ' ;']
-const semicolons = [';; ', ' ;;']
-const parens = ['(* ', ' *)']
-const dashes = ['-- ', ' --']
-const percents = ['%% ', ' %%']
-const troffcom = ['.\\"', '"\\.']
+const hashes = ['# ', ' #'];
+const slashes = ['/* ', ' */'];
+const semicolon = ['; ', ' ;'];
+const semicolons = [';; ', ' ;;'];
+const parens = ['(* ', ' *)'];
+const dashes = ['-- ', ' --'];
+const percents = ['%% ', ' %%'];
+const troffcom = ['.\\"', '"\\.'];
 
 /*
 	Credit: Oscar Mulder
@@ -50,4 +50,4 @@ export const languageDemiliters: { [lang: string]: string[] | undefined } = {
   'typescriptreact': slashes,
   'xsl': slashes,
   'yaml': hashes
-}
+};
