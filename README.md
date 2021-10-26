@@ -10,6 +10,8 @@ Want your own dynamic headers on your projects, but cant be arsed to do much wor
 ## Config file
 > Sample file can be found in the sample directory
 
+> There is only one reserved keyword: `$FILE`. This will give the path of the file.
+
 Create a new file called .header in the root of your scope. Variables are defined in the `$NAME=command` manner. The `command` part will be executed just like in the shell.
 
 You can quickly add padding using `$NAME(padding:x)=command`. At the end of the config file, write `===` followed by a newline. The rest will be used as banner. `$NAME` will be resolved to the command listed above. If needed you can add p characters at the end for visual padding.
