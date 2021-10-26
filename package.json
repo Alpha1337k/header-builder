@@ -2,7 +2,7 @@
   "name": "header-builder",
   "displayName": "Header Builder",
   "description": "Vscode custom header extension",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "icon": "logo.png",
   "publisher": "Alpha1337k",
   "repository": {

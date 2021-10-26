@@ -132,8 +132,12 @@ export function activate(context: vscode.ExtensionContext) {
 		updateParser(path);
 		if (parser === undefined)
 			return;	
-		vscode.workspace.findFiles("**/*", '', undefined).then((files: vscode.Uri[]) => {
-			createHeadersEverywhere(files);
+		vscode.window.showInputBox({prompt: 'Set glob pattern', placeHolder: 'e.g **/*.c'}).then((glob: string | undefined) => {
+			if (glob === undefined)
+				return;
+			vscode.workspace.findFiles(glob, '', undefined).then((files: vscode.Uri[]) => {
+				createHeadersEverywhere(files);
+			});
 		});
 	}));
 }
