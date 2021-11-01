@@ -1,4 +1,4 @@
-# header-builder README
+# Header Builder
 
 ## Create and update headers quickly
 Want your own dynamic headers on your projects, but cant be arsed to do much work? Fear no more! By setting up a simple config file you will be up in no time!
@@ -21,10 +21,13 @@ You can quickly add padding using `$NAME(padding:x)=command`. At the end of the 
 
 If you wish to disable on save changes, you can add the `!RunOnSave 0` setting to the header.
 
+## Links
+[GitHub](https://github.com/Alpha1337k/header-builder)
 
+[VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=Alpha1337k.header-builder)
 
 ## Bugs and such
-Please make a pull request or issue on my [repository](https://github.com/Alpha1337k/header-builder). Thanks!
+Please make a pull request or issue on my [repository](https://github.com/Alpha1337k/header-builder/pulls). Thanks!
 
 ## License
 MIT
