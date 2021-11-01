@@ -11,7 +11,7 @@ Want your own dynamic headers on your projects, but cant be arsed to do much wor
 - Header Builder: Create headers in all files.
 
 ## Config file
-> Sample file can be found in the sample directory
+> Sample file can be found in the [sample](https://github.com/Alpha1337k/header-builder/tree/main/samples) directory
 
 > There is only one reserved keyword: `$FILE`. This will give the path of the file.
 
